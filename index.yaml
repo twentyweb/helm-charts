@@ -10,4 +10,14 @@ entries:
     urls:
     - https://github.com/twentyweb/helm-charts/releases/download/laravel-0.5.0/laravel-0.5.0.tgz
     version: 0.5.0
-generated: "2021-07-15T11:04:25.069626099Z"
+  laravel-secrets:
+  - apiVersion: v2
+    created: "2021-07-15T11:39:34.184399599Z"
+    description: laravel app secrets
+    digest: e063f028953f22a7a9811f7aebc41b2ed992a6067ad1c0bde0b7f4b3bbb66974
+    name: laravel-secrets
+    type: application
+    urls:
+    - https://github.com/twentyweb/helm-charts/releases/download/laravel-secrets-0.2.0/laravel-secrets-0.2.0.tgz
+    version: 0.2.0
+generated: "2021-07-15T11:39:34.1844042Z"
