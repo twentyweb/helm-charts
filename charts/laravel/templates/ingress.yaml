@@ -1,0 +1,39 @@
+{{- if and .Values.ingress.enabled .Values.deployment.enabled -}}
+{{- $fullName := include "laravel.fullname" . -}}
+{{- $svcPort := .Values.service.port -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "laravel.labels" . | nindent 4 }}
+  annotations:
+    {{- if .Values.redirect.enabled }}
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    {{- end }}
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  tls:
+    - hosts:
+      {{- range .Values.ingress.tls }}
+        - {{ . | quote }}
+      {{- end }}
+      secretName: {{ $fullName }}-tls
+  rules:
+  {{- range .Values.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+        {{- range .paths }}
+          - path: {{ . }}
+            pathType: "ImplementationSpecific"
+            backend:
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $svcPort }}
+        {{- end }}
+  {{- end }}
+{{- end }}

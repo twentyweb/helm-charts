@@ -1,0 +1,40 @@
+{{- if .Values.hooks.postDeploy.enabled -}}
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "laravel.fullname" . }}-post-deploy
+  labels:
+    {{- include "laravel.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ template "laravel.deployment-app.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Values.deployment.version }}
+  annotations:
+    "helm.sh/hook": "post-install,post-upgrade"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: post-deploy-job
+          image: {{ required "App image required" .Values.deployment.images.app }}:{{ required "App version" .Values.deployment.version }}
+          imagePullPolicy: {{ .Values.deployment.pullPolicy }}
+          command: ["/bin/sh", "-c"]
+          args: {{ .Values.hooks.postDeploy.command | toJson }}
+          env:
+            - name: LOG_CHANNEL
+              value: "stderr"
+            {{- with .Values.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          envFrom:
+            {{- with .Values.envFrom }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+
+{{ end }}

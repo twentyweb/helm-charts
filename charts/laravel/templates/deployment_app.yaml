@@ -1,0 +1,113 @@
+{{ define "laravel.deployment-app.name" -}}
+{{ template "laravel.name" . }}-app
+{{- end -}}
+
+{{ define "laravel.deployment-app.fullname" -}}
+{{ template "laravel.fullname" . }}-app
+{{- end -}}
+
+{{- if .Values.deployment.enabled -}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "laravel.deployment-app.fullname" . }}
+  labels:
+    {{- include "laravel.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ template "laravel.deployment-app.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Values.deployment.version }}
+    role: "app"
+spec:
+  replicas: {{ .Values.deployment.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ template "laravel.deployment-app.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      {{- with .Values.rollingUpdate }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+  revisionHistoryLimit: 3
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ template "laravel.deployment-app.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/version: {{ .Values.deployment.version }}
+        role: "app"
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "laravel.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+    {{- if not .Values.options.disableDefaultAppAffinity }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                  - key: "app.kubernetes.io/instance"
+                    operator: In
+                    values:
+                      - {{ .Release.Name }}
+                  - key: "app.kubernetes.io/version"
+                    operator: In
+                    values:
+                      - {{ .Values.deployment.version }}
+                  - key: "role"
+                    operator: In
+                    values:
+                      - "app"
+              topologyKey: "kubernetes.io/hostname"
+    {{- end }}
+      containers:
+        - name: app
+          image: {{ required "App image required" .Values.deployment.images.app }}:{{ required "App version" .Values.deployment.version }}
+          imagePullPolicy: {{ .Values.deployment.pullPolicy }}
+          command: [ "/scripts/entrypoint_laravel_app.sh" ]
+          args: [ ]
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+            - name: health
+              containerPort: 8000
+              protocol: TCP
+          resources:
+            {{- with .Values.deployment.resources }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          env:
+            {{- if not .Values.options.disableDefaultEnv }}
+            - name: LOG_CHANNEL
+              value: "stderr"
+            {{- end }}
+            {{- with .Values.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          envFrom:
+            {{- with .Values.envFrom }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /status
+              port: health
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: health
+            initialDelaySeconds: 30
+            periodSeconds: 30
+
+{{- end -}}
