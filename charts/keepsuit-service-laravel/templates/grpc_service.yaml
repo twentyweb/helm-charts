@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "keepsuit-service-laravel.fullname" . }}-grpc
+  name: {{ include "keepsuit-service-laravel.name" . }}-grpc
   labels:
     {{- include "keepsuit-service-laravel.labels" . | nindent 4 }}
     app.kubernetes.io/component: "grpc"
