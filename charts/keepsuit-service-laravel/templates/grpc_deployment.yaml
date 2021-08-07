@@ -28,16 +28,16 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "keepsuit-service-laravel.selectorLabels" . | nindent 8 }}
+        {{- include "keepsuit-service-laravel.commonSelectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: "grpc"
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "keepsuit-service-laravel.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      serviceAccountName: {{ include "keepsuit-service-laravel.name" . }}
+      # securityContext:
+      #   {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: "grpc"
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Values.tag }}"

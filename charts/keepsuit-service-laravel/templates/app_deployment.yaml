@@ -12,7 +12,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "keepsuit-service-laravel.selectorLabels" . | nindent 6 }}
+      {{- include "keepsuit-service-laravel.commonSelectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: "app"
   strategy:
     type: RollingUpdate
@@ -28,25 +28,25 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "keepsuit-service-laravel.selectorLabels" . | nindent 8 }}
+        {{- include "keepsuit-service-laravel.commonSelectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: "app"
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "keepsuit-service-laravel.serviceAccountName" . }}
+      serviceAccountName: {{ include "keepsuit-service-laravel.name" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: "app"
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Values.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if .Values.app.deployment.octane -}}
+          {{- if .Values.app.deployment.octane }}
           command: [ "/scripts/entrypoint_laravel_app_octane.sh" ]
-          {{- else -}}
+          {{- else }}
           command: [ "/scripts/entrypoint_laravel_app_fpm.sh" ]
-          {{- end -}}
+          {{- end }}
           args: [ ]
           env:
             - name: APP_VERSION

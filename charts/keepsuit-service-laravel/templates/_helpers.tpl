@@ -2,7 +2,7 @@
 Expand the name of the chart.
 */}}
 {{- define "keepsuit-service-laravel.name" -}}
-{{- default .Chart.Name .Values.name | trunc 63 | trimSuffix "-" }}
+{{- required "Name is required and should not change" .Values.name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 # {{/*
@@ -35,7 +35,7 @@ Common labels
 */}}
 {{- define "keepsuit-service-laravel.labels" -}}
 helm.sh/chart: {{ include "keepsuit-service-laravel.chart" . }}
-{{ include "keepsuit-service-laravel.selectorLabels" . }}
+{{ include "keepsuit-service-laravel.commonSelectorLabels" . }}
 {{- if .Values.tag }}
 app.kubernetes.io/version: {{ .Values.tag }}
 {{- end }}
@@ -50,13 +50,13 @@ app.kubernetes.io/name: {{ include "keepsuit-service-laravel.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "keepsuit-service-laravel.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "keepsuit-service-laravel.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
+# {{/*
+# Create the name of the service account to use
+# */}}
+# {{- define "keepsuit-service-laravel.serviceAccountName" -}}
+# {{- if .Values.serviceAccount.create }}
+# {{- default (include "keepsuit-service-laravel.name" .) .Values.serviceAccount.name }}
+# {{- else }}
+# {{- default "default" .Values.serviceAccount.name }}
+# {{- end }}
+# {{- end }}

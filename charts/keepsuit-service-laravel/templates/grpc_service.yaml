@@ -14,6 +14,6 @@ spec:
       protocol: TCP
       name: grpc
   selector:
-    {{- include "keepsuit-service-laravel.selectorLabels" . | nindent 4 }}
+    {{- include "keepsuit-service-laravel.commonSelectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: "grpc"
 {{- end -}}

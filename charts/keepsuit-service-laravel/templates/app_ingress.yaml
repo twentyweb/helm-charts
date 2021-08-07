@@ -1,15 +1,15 @@
 {{- if .Values.app.ingress.enabled -}}
-{{- $name := include "keepsuit-service-laravel.name" . -}}-app
+{{- $name := include "keepsuit-service-laravel.name" . -}}
 {{- $svcPort := .Values.app.service.port -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ $name }}
+  name: {{ $name }}-app
   labels:
     {{- include "keepsuit-service-laravel.labels" . | nindent 4 }}
     app.kubernetes.io/component: "app"
   annotations:
-    {{- if .Values.redirect.enabled }}
+    {{- if .Values.app.redirect.enabled }}
     nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
     {{- end }}
     {{- with .Values.app.ingress.annotations }}
@@ -18,13 +18,11 @@ metadata:
 spec:
   {{- if .Values.app.ingress.tls }}
   tls:
-    {{- range .Values.app.ingress.tls }}
     - hosts:
-        {{- range .hosts }}
+      {{- range .Values.app.ingress.tls }}
         - {{ . | quote }}
-        {{- end }}
-      secretName: {{ $name }}-tls
-    {{- end }}
+      {{- end }}
+      secretName: {{ $name }}-app-tls
   {{- end }}
   rules:
     {{- range .Values.app.ingress.hosts }}
@@ -36,7 +34,7 @@ spec:
             pathType: {{ default "ImplementationSpecific" .pathType }}
             backend:
               service:
-                name: {{ $name }}
+                name: {{ $name }}-app
                 port:
                   number: {{ $svcPort }}
           {{- end }}

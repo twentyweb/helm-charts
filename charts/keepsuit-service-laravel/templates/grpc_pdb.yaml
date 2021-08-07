@@ -14,6 +14,6 @@ spec:
   minAvailable: {{ .Values.grpc.deployment.minAvailable }}
   selector:
     matchLabels:
-      {{- include "keepsuit-service-laravel.selectorLabels" . | nindent 4 }}
+      {{- include "keepsuit-service-laravel.commonSelectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: "grpc"
 {{- end }}
