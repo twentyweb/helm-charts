@@ -49,6 +49,8 @@ app:
   enabled: true
 
   deployment:
+    octane: false
+
     replicaCount: 2
     minAvailable: 1
 
