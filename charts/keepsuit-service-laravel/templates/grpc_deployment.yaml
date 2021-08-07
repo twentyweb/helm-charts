@@ -12,7 +12,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "keepsuit-service-laravel.selectorLabels" . | nindent 6 }}
+      {{- include "keepsuit-service-laravel.commonSelectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: "grpc"
   strategy:
     type: RollingUpdate
@@ -36,8 +36,8 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "keepsuit-service-laravel.name" . }}
-      # securityContext:
-      #   {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: "grpc"
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Values.tag }}"
@@ -59,19 +59,17 @@ spec:
             {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
-            - name: http
-              containerPort: 80
+            - name: grpc
+              containerPort: 9090
               protocol: TCP
           readinessProbe:
-            httpGet:
-              path: /health
-              port: http
+            exec:
+              command: [ "/usr/local/bin/grpc_health_probe", "-addr=:9090" ]
             initialDelaySeconds: 30
             periodSeconds: 30
           livenessProbe:
-            httpGet:
-              path: /health
-              port: http
+            exec:
+              command: [ "/usr/local/bin/grpc_health_probe", "-addr=:9090" ]
             initialDelaySeconds: 30
             periodSeconds: 30
           resources:
