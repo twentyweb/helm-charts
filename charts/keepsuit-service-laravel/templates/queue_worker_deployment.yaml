@@ -1,0 +1,67 @@
+{{- if .Values.queueWorkers.enabled -}}
+
+{{- $outer := . -}}
+{{- range .Values.queueWorkers.queues -}}
+{{- $queue := . -}}
+{{- with $outer }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "keepsuit-service-laravel.name" . }}-queue-{{ $queue.name }}
+  labels:
+    {{- include "keepsuit-service-laravel.labels" . | nindent 4 }}
+    app.kubernetes.io/component: "queue-{{ $queue.name }}"
+spec:
+  replicas: {{ default 1 $queue.replica }}
+  selector:
+    matchLabels:
+      {{- include "keepsuit-service-laravel.commonSelectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: "queue-{{ $queue.name }}"
+  revisionHistoryLimit: 3
+  template:
+    metadata:
+     labels:
+        {{- include "keepsuit-service-laravel.commonSelectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: "queue-{{ $queue.name }}"
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "keepsuit-service-laravel.name" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: queue-worker
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Values.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: [ "/scripts/entrypoint_laravel_queue.sh" ]
+          args: [ ]
+          resources:
+            {{- with .Values.queueWorkers.resources }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          env:
+            - name: APP_VERSION
+              value: {{ .Values.tag }}
+            - name: QUEUE
+              value: {{ quote $queue.name }}
+            {{- with .Values.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.queueWorkers.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          envFrom:
+            {{- with .Values.envFrom }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.queueWorkers.envFrom }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+
+{{- end -}}
+{{- end -}}
+
+{{- end }}

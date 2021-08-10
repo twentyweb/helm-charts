@@ -155,6 +155,13 @@ grpc:
 #
 horizon:
   enabled: false
+
+  #
+  # Horizon only environment settings
+  #
+  env:
+  envFrom: [ ]
+
   resources:
     requests:
       cpu: "25m"
@@ -165,6 +172,13 @@ horizon:
 
 queueWorkers:
   enabled: false
+
+  #
+  # Queue only environment settings
+  #
+  env:
+  envFrom: [ ]
+
   queues:
     - name: "default"
       replica: 1
@@ -181,6 +195,13 @@ queueWorkers:
 #
 scheduler:
   enabled: false
+
+  #
+  # Scheduler only environment settings
+  #
+  env:
+  envFrom: [ ]
+
   resources:
     requests:
       cpu: "25m"
