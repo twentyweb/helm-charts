@@ -19,6 +19,8 @@ image:
 # Environment settings
 #
 env:
+  - name: LOG_CHANNEL
+    value: "stderr"
 
 envFrom: []
 
@@ -47,6 +49,12 @@ hooks:
 #
 app:
   enabled: true
+
+  #
+  # App only environment settings
+  #
+  env:
+  envFrom: [ ]
 
   deployment:
     octane: false
@@ -103,6 +111,12 @@ app:
 #
 grpc:
   enabled: false
+
+  #
+  # Grpc only environment settings
+  #
+  env:
+  envFrom: [ ]
 
   deployment:
     replicaCount: 2

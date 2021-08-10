@@ -51,15 +51,17 @@ spec:
           env:
             - name: APP_VERSION
               value: {{ .Values.tag }}
-            {{- if not .Values.options.disableDefaultEnv }}
-            - name: LOG_CHANNEL
-              value: "stderr"
-            {{- end }}
             {{- with .Values.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.app.env }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           envFrom:
             {{- with .Values.envFrom }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.app.envFrom }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
