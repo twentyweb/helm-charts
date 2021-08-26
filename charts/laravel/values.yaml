@@ -14,7 +14,7 @@ deployment:
 
   resources:
     requests:
-      cpu: "25m"
+      cpu: "15m"
       memory: "64Mi"
     limits:
       cpu: "600m"
@@ -85,7 +85,7 @@ horizon:
   enabled: false
   resources:
     requests:
-      cpu: "25m"
+      cpu: "5m"
       memory: "128Mi"
     limits:
       cpu: "600m"
@@ -98,7 +98,7 @@ queueWorkers:
       replica: 1
   resources:
     requests:
-      cpu: "25m"
+      cpu: "5m"
       memory: "64Mi"
     limits:
       cpu: "600m"
@@ -112,7 +112,7 @@ scheduler:
   cron: false
   resources:
     requests:
-      cpu: "25m"
+      cpu: "10m"
       memory: "64Mi"
     limits:
       cpu: "600m"
