@@ -182,6 +182,10 @@ queueWorkers:
   queues:
     - name: "default"
       replica: 1
+      # tries: 1
+      # timeout: 90
+      # maxJobs: 0
+      # maxTime: 0
   resources:
     requests:
       cpu: "25m"

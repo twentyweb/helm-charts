@@ -47,6 +47,26 @@ spec:
               value: {{ .Values.tag }}
             - name: QUEUE
               value: {{ quote $queue.name }}
+            {{- if $queue.connection }}
+            - name: CONNECTION
+              value: {{ quote $queue.connection }}
+            {{- end }}
+            {{- if $queue.tries }}
+            - name: TRIES
+              value: {{ quote $queue.tries }}
+            {{- end }}
+            {{- if $queue.timeout }}
+            - name: TIMEOUT
+              value: {{ quote $queue.timeout }}
+            {{- end }}
+            {{- if $queue.maxJobs }}
+            - name: MAX_JOBS
+              value: {{ quote $queue.maxJobs }}
+            {{- end }}
+            {{- if $queue.maxTime }}
+            - name: MAX_TIME
+              value: {{ quote $queue.maxTime }}
+            {{- end }}
             {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
