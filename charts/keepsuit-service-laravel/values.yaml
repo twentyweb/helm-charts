@@ -179,7 +179,7 @@ queueWorkers:
   env:
   envFrom: [ ]
 
-  queues:
+  workers:
     - name: "default"
       replica: 1
       # tries: 1

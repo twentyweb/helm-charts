@@ -1,14 +1,14 @@
 {{- if .Values.queueWorkers.enabled -}}
 
 {{- $outer := . -}}
-{{- range .Values.queueWorkers.queues -}}
+{{- range .Values.queueWorkers.workers -}}
 {{- $queue := . -}}
 {{- with $outer }}
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "keepsuit-service-laravel.name" . }}-queue-{{ $queue.name }}
+  name: {{ include "keepsuit-service-laravel.name" . }}-queue-{{ required "Queue name is required" $queue.name }}
   labels:
     {{- include "keepsuit-service-laravel.labels" . | nindent 4 }}
     app.kubernetes.io/component: "queue-{{ $queue.name }}"
@@ -45,8 +45,10 @@ spec:
           env:
             - name: APP_VERSION
               value: {{ .Values.tag }}
+            {{- if $queue.name }}
             - name: QUEUE
-              value: {{ quote $queue.name }}
+              value: {{ quote $queue.queue }}
+            {{- end }}
             {{- if $queue.connection }}
             - name: CONNECTION
               value: {{ quote $queue.connection }}
