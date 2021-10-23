@@ -4,7 +4,7 @@
 {{- range .Values.queueWorkers.workers -}}
 {{- $queue := . -}}
 {{- with $outer }}
-
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
