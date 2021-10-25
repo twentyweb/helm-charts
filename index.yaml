@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   keepsuit-service-laravel:
   - apiVersion: v2
+    created: "2021-10-25T12:54:00.499716057Z"
+    description: A Helm chart for Kubernetes
+    digest: d2c0abcf3551df492861da16eac4c74b64f3c9a645411c27b3a27374b26a16a5
+    name: keepsuit-service-laravel
+    type: application
+    urls:
+    - https://github.com/twentyweb/helm-charts/releases/download/keepsuit-service-laravel-0.1.6/keepsuit-service-laravel-0.1.6.tgz
+    version: 0.1.6
+  - apiVersion: v2
     created: "2021-10-25T11:57:49.244385607Z"
     description: A Helm chart for Kubernetes
     digest: 18e704bbb1e07a7a8c2a7ae01eb959ccd741f8aa77bfad394c57b2130341d5eb
@@ -85,4 +94,4 @@ entries:
     urls:
     - https://github.com/twentyweb/helm-charts/releases/download/laravel-secrets-0.2.0/laravel-secrets-0.2.0.tgz
     version: 0.2.0
-generated: "2021-10-25T11:57:49.244627516Z"
+generated: "2021-10-25T12:54:00.49976006Z"
