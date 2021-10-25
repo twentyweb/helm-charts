@@ -31,6 +31,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      terminationGracePeriodSeconds: {{ mul 2 (default 90 $queue.timeout) }}
       serviceAccountName: {{ include "keepsuit-service-laravel.name" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -38,7 +39,6 @@ spec:
         - name: queue-worker
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Values.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          terminationGracePeriodSeconds: {{ mul 2 (default 90 $queue.timeout) }}
           command: [ "/scripts/entrypoint_laravel_queue.sh" ]
           args: [ ]
           resources:
