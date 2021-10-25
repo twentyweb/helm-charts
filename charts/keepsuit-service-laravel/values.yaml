@@ -182,6 +182,7 @@ queueWorkers:
   workers:
     - name: "default"
       replica: 1
+      # queue: "default"
       # tries: 1
       # timeout: 90
       # maxJobs: 0
