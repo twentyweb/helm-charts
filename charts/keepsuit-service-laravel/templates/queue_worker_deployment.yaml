@@ -38,7 +38,7 @@ spec:
         - name: queue-worker
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Values.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          terminationGracePeriodSeconds: {{ mul 2 (default 90 .$queue.timeout) }}
+          terminationGracePeriodSeconds: {{ mul 2 (default 90 $queue.timeout) }}
           command: [ "/scripts/entrypoint_laravel_queue.sh" ]
           args: [ ]
           resources:
