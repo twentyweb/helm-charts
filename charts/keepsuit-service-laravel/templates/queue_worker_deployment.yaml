@@ -15,7 +15,7 @@ metadata:
 spec:
   {{- if $queue.replicas }}
   replicas: {{ $queue.replicas }}
-  {{-end }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "keepsuit-service-laravel.commonSelectorLabels" . | nindent 6 }}
