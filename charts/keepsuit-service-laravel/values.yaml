@@ -181,7 +181,7 @@ queueWorkers:
 
   workers:
     - name: "default"
-      replica: 1
+      # replicas: 1
       # queue: "default"
       # tries: 1
       # timeout: 90

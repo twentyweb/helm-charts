@@ -13,7 +13,9 @@ metadata:
     {{- include "keepsuit-service-laravel.labels" . | nindent 4 }}
     app.kubernetes.io/component: "queue-{{ $queue.name }}"
 spec:
-  replicas: {{ default 1 $queue.replica }}
+  {{- if $queue.replicas }}
+  replicas: {{ $queue.replicas }}
+  {{-end }}
   selector:
     matchLabels:
       {{- include "keepsuit-service-laravel.commonSelectorLabels" . | nindent 6 }}
@@ -36,6 +38,7 @@ spec:
         - name: queue-worker
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Values.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          terminationGracePeriodSeconds: {{ mul 2 (default 90 .$queue.timeout) }}
           command: [ "/scripts/entrypoint_laravel_queue.sh" ]
           args: [ ]
           resources:
