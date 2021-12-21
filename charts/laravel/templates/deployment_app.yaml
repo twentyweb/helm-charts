@@ -46,6 +46,10 @@ spec:
       serviceAccountName: {{ include "laravel.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+    {{- if not .Values.options.allowArmNodes }}
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
+    {{- end }}
     {{- if not .Values.options.disableDefaultAppAffinity }}
       affinity:
         podAntiAffinity:

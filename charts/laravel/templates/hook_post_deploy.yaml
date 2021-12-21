@@ -20,6 +20,10 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if not .Values.options.allowArmNodes }}
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
+      {{- end }}
       containers:
         - name: post-deploy-job
           image: {{ required "App image required" .Values.deployment.images.app }}:{{ required "App version" .Values.deployment.version }}
