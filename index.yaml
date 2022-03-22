@@ -93,6 +93,16 @@ entries:
     version: 0.1.0
   laravel:
   - apiVersion: v2
+    appVersion: 0.5.4
+    created: "2022-03-22T09:28:25.94449016Z"
+    description: A Helm chart for deploying laravel apps
+    digest: f1851e2cd1bd88db78e7b6bd6e74b9109e55fb38b3e18d5552047d2b04f0979a
+    name: laravel
+    type: application
+    urls:
+    - https://github.com/twentyweb/helm-charts/releases/download/laravel-0.5.4/laravel-0.5.4.tgz
+    version: 0.5.4
+  - apiVersion: v2
     appVersion: 0.5.3
     created: "2021-12-21T11:09:41.185209939Z"
     description: A Helm chart for deploying laravel apps
@@ -131,4 +141,4 @@ entries:
     urls:
     - https://github.com/twentyweb/helm-charts/releases/download/laravel-secrets-0.2.0/laravel-secrets-0.2.0.tgz
     version: 0.2.0
-generated: "2021-12-21T11:09:41.185246138Z"
+generated: "2022-03-22T09:28:25.944531761Z"
