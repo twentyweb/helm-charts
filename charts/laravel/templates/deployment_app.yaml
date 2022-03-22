@@ -54,23 +54,21 @@ spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                  - key: "app.kubernetes.io/instance"
-                    operator: In
-                    values:
-                      - {{ .Release.Name }}
-                  - key: "app.kubernetes.io/version"
-                    operator: In
-                    values:
-                      - {{ .Values.deployment.version }}
-                  - key: "role"
-                    operator: In
-                    values:
-                      - "app"
-              topologyKey: "kubernetes.io/hostname"
+          - labelSelector:
+              matchExpressions:
+                - key: "app.kubernetes.io/instance"
+                  operator: In
+                  values:
+                    - {{ .Release.Name }}
+                - key: "app.kubernetes.io/version"
+                  operator: In
+                  values:
+                    - {{ .Values.deployment.version }}
+                - key: "role"
+                  operator: In
+                  values:
+                    - "app"
+            topologyKey: "kubernetes.io/hostname"
     {{- end }}
       containers:
         - name: app
