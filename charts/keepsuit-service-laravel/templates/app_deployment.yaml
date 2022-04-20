@@ -50,7 +50,7 @@ spec:
           args: [ ]
           env:
             - name: APP_VERSION
-              value: {{ .Values.tag }}
+              value: "{{ .Values.tag }}"
             {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -98,7 +98,7 @@ spec:
                   - key: "app.kubernetes.io/version"
                     operator: In
                     values:
-                      - {{ .Values.tag }}
+                      - "{{ .Values.tag }}"
                   - key: "app.kubernetes.io/component"
                     operator: In
                     values:

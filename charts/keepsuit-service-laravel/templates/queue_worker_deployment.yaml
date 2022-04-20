@@ -47,7 +47,7 @@ spec:
             {{- end }}
           env:
             - name: APP_VERSION
-              value: {{ .Values.tag }}
+              value: "{{ .Values.tag }}"
             - name: NAME
               value: {{ quote $queue.name }}
             {{- if $queue.queue }}

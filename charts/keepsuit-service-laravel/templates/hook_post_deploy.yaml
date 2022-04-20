@@ -28,7 +28,7 @@ spec:
           args: {{ .Values.hooks.postDeploy.command | toJson }}
           env:
             - name: APP_VERSION
-              value: {{ .Values.tag }}
+              value: "{{ .Values.tag }}"
             {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}
             {{- end }}

@@ -37,17 +37,17 @@ Common labels
 helm.sh/chart: {{ include "keepsuit-service-laravel.chart" . }}
 {{ include "keepsuit-service-laravel.commonSelectorLabels" . }}
 {{- if .Values.tag }}
-app.kubernetes.io/version: {{ .Values.tag }}
+app.kubernetes.io/version: "{{ .Values.tag }}"
 {{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/managed-by: "{{ .Release.Service }}"
 {{- end }}
 
 {{/*
 Selector labels
 */}}
 {{- define "keepsuit-service-laravel.commonSelectorLabels" -}}
-app.kubernetes.io/name: {{ include "keepsuit-service-laravel.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/name: "{{ include "keepsuit-service-laravel.name" . }}"
+app.kubernetes.io/instance: "{{ .Release.Name }}"
 {{- end }}
 
 # {{/*
