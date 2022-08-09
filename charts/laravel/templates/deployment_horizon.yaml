@@ -16,7 +16,7 @@ metadata:
     {{- include "laravel.labels" . | nindent 4 }}
     app.kubernetes.io/name: {{ template "laravel.deployment-horizon.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/version: {{ .Values.deployment.version }}
+    app.kubernetes.io/version: "{{ .Values.deployment.version }}"
     role: "horizon"
 spec:
   replicas: 1
@@ -30,7 +30,7 @@ spec:
       labels:
         app.kubernetes.io/name: {{ template "laravel.deployment-horizon.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/version: {{ .Values.deployment.version }}
+        app.kubernetes.io/version: "{{ .Values.deployment.version }}"
         role: "horizon"
     spec:
     {{- with .Values.imagePullSecrets }}
