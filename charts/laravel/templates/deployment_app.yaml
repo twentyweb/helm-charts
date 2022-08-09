@@ -63,7 +63,7 @@ spec:
                 - key: "app.kubernetes.io/version"
                   operator: In
                   values:
-                    - {{ .Values.deployment.version }}
+                    - "{{ .Values.deployment.version }}"
                 - key: "role"
                   operator: In
                   values:
