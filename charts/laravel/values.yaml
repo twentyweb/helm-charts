@@ -14,7 +14,7 @@ deployment:
 
   resources:
     requests:
-      cpu: "15m"
+      cpu: "10m"
       memory: "64Mi"
     limits:
       cpu: "600m"
@@ -26,10 +26,6 @@ deployment:
 
   images:
     app: ""
-#    nginx: ''
-
-#imagePullSecrets:
-#  - name: regcred
 
 hooks:
   postDeploy:
@@ -110,7 +106,7 @@ scheduler:
   cron: false
   resources:
     requests:
-      cpu: "10m"
+      cpu: "5m"
       memory: "64Mi"
     limits:
       cpu: "600m"
