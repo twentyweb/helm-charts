@@ -54,7 +54,7 @@ app:
   # App only environment settings
   #
   env:
-  envFrom: [ ]
+  envFrom: []
 
   deployment:
     octane: false
@@ -116,7 +116,7 @@ grpc:
   # Grpc only environment settings
   #
   env:
-  envFrom: [ ]
+  envFrom: []
 
   deployment:
     replicaCount: 2
@@ -160,7 +160,7 @@ horizon:
   # Horizon only environment settings
   #
   env:
-  envFrom: [ ]
+  envFrom: []
 
   resources:
     requests:
@@ -177,7 +177,7 @@ queueWorkers:
   # Queue only environment settings
   #
   env:
-  envFrom: [ ]
+  envFrom: []
 
   workers:
     - name: "default"
@@ -195,6 +195,28 @@ queueWorkers:
       cpu: "600m"
       memory: "512Mi"
 
+temporal:
+  enabled: false
+
+  #
+  # Temporal only environment settings
+  #
+  env:
+  envFrom: []
+
+  workers:
+    - name: "default"
+      # workers: 1
+      # maxJobs: 0
+      # maxMemory: 0
+  resources:
+    requests:
+      cpu: "10m"
+      memory: "64Mi"
+    limits:
+      cpu: "600m"
+      memory: "512Mi"
+
 #
 # Enable scheduler
 #
@@ -205,7 +227,7 @@ scheduler:
   # Scheduler only environment settings
   #
   env:
-  envFrom: [ ]
+  envFrom: []
 
   resources:
     requests:
