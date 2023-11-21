@@ -74,7 +74,6 @@ spec:
         - name: app
           image: {{ required "App image required" .Values.deployment.images.app }}:{{ required "App version" .Values.deployment.version }}
           imagePullPolicy: {{ .Values.deployment.pullPolicy }}
-          command: [ "/scripts/entrypoint_laravel_app.sh" ]
           args: [ ]
           ports:
             - name: http
