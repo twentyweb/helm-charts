@@ -102,8 +102,8 @@ spec:
             httpGet:
               path: /status
               port: health
-            initialDelaySeconds: 30
-            periodSeconds: 30
+            initialDelaySeconds: 5
+            periodSeconds: 15
           livenessProbe:
             httpGet:
               path: /ping
