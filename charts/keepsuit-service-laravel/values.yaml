@@ -58,6 +58,7 @@ app:
 
   deployment:
     octane: false
+    healthEndpoint: "/health"
 
     replicaCount: 2
     minAvailable: 1
