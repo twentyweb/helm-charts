@@ -98,6 +98,12 @@ spec:
             {{- with .Values.envFrom }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+          volumeMounts:
+            {{- range .Values.secretVolumes }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath | default "/" }}
+              readOnly: true
+            {{- end }}
           readinessProbe:
             httpGet:
               path: /status
@@ -110,5 +116,12 @@ spec:
               port: health
             initialDelaySeconds: 30
             periodSeconds: 30
-
+      volumes:
+        {{- range .Values.secretVolumes }}
+        - name: {{ .name }}
+          secret:
+            secretName: {{ .name }}
+            items:
+              {{- toYaml .items | nindent 14 }}
+        {{- end }}
 {{- end -}}

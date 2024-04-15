@@ -73,6 +73,15 @@ env:
 envFrom: []
 
 #
+# Secrets to mount as volumes
+#
+secretVolumes: []
+# - name: secret-name
+#   items:
+#     - key: filename-source
+#       path: storage/filename-destination
+
+#
 # Enable horizon or standard queue workers
 #
 horizon:
