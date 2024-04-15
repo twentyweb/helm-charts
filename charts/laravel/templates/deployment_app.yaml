@@ -100,9 +100,13 @@ spec:
             {{- end }}
           volumeMounts:
             {{- range .Values.secretVolumes }}
-            - name: {{ .name }}
-              mountPath: {{ .mountPath | default "/" }}
+            {{- $volume := . -}}
+            {{- range .items }}
+            - name: {{ $volume.name }}
+              mountPath: {{ $volume.mountPath | default "/" | trimSuffix "/" }}/{{ .key }}
+              subPath: {{ .key }}
               readOnly: true
+            {{- end }}
             {{- end }}
           readinessProbe:
             httpGet:
