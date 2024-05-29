@@ -15,10 +15,10 @@ deployment:
   resources:
     requests:
       cpu: "10m"
-      memory: "64Mi"
+      memory: "128Mi"
     limits:
-      cpu: "600m"
-      memory: "1024Mi"
+      cpu: "500m"
+      memory: "640Mi"
 
   pullPolicy: IfNotPresent
 
@@ -89,10 +89,10 @@ horizon:
   resources:
     requests:
       cpu: "5m"
-      memory: "128Mi"
+      memory: "192Mi"
     limits:
-      cpu: "600m"
-      memory: "1024Mi"
+      cpu: "500m"
+      memory: "640Mi"
 
 queueWorkers:
   enabled: false
@@ -102,10 +102,10 @@ queueWorkers:
   resources:
     requests:
       cpu: "5m"
-      memory: "64Mi"
+      memory: "96Mi"
     limits:
-      cpu: "600m"
-      memory: "1024Mi"
+      cpu: "500m"
+      memory: "640Mi"
 
 #
 # Enable scheduler
@@ -118,8 +118,8 @@ scheduler:
       cpu: "5m"
       memory: "64Mi"
     limits:
-      cpu: "600m"
-      memory: "1024Mi"
+      cpu: "500m"
+      memory: "640Mi"
 
 options:
   disableDefaultEnv: false
