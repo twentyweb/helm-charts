@@ -8,6 +8,11 @@ deployment:
   # Additional pod annotations
   podAnnotations: {}
 
+  # Health check settings
+  healthCheck:
+    path: "/ping"
+    port: 8000
+
   rollingUpdate:
     maxUnavailable: 0
     maxSurge: 1

@@ -79,9 +79,11 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
+            {{- if ne (int .Values.deployment.healthCheck.port) 80 }}
             - name: health
-              containerPort: 8000
+              containerPort: {{ .Values.deployment.healthCheck.port}}
               protocol: TCP
+            {{- end }}
           resources:
             {{- with .Values.deployment.resources }}
             {{- toYaml . | nindent 12 }}
@@ -110,14 +112,14 @@ spec:
             {{- end }}
           readinessProbe:
             httpGet:
-              path: /status
-              port: health
+              path: {{ .Values.deployment.healthCheck.path }}
+              port: {{ eq (int .Values.deployment.healthCheck.port) 80 | ternary "http" "health" }}
             initialDelaySeconds: 5
             periodSeconds: 15
           livenessProbe:
             httpGet:
-              path: /ping
-              port: health
+              path: {{ .Values.deployment.healthCheck.path }}
+              port: {{ eq (int .Values.deployment.healthCheck.port) 80 | ternary "http" "health" }}
             initialDelaySeconds: 30
             periodSeconds: 30
       volumes:

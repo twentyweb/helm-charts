@@ -1,0 +1,18 @@
+deployment:
+  version: "v1"
+  images:
+    app: "debug/image"
+
+  healthCheck:
+    path: "/up"
+    port: 80
+
+horizon:
+  enabled: true
+
+secretVolumes:
+  - name: secret-name
+    mountPath: /storage
+    items:
+      - key: filename-source
+        path: filename-destination
