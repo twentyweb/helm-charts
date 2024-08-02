@@ -8,6 +8,7 @@ deployment:
   # Additional pod annotations
   podAnnotations: {}
 
+  port: 80
   # Health check settings
   healthCheck:
     path: "/ping"

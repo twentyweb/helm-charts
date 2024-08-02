@@ -77,9 +77,9 @@ spec:
           args: [ ]
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ (int .Values.deployment.port) }}
               protocol: TCP
-            {{- if ne (int .Values.deployment.healthCheck.port) 80 }}
+            {{- if ne (int .Values.deployment.healthCheck.port) (int .Values.deployment.port) }}
             - name: health
               containerPort: {{ .Values.deployment.healthCheck.port}}
               protocol: TCP
@@ -113,13 +113,13 @@ spec:
           readinessProbe:
             httpGet:
               path: {{ .Values.deployment.healthCheck.path }}
-              port: {{ eq (int .Values.deployment.healthCheck.port) 80 | ternary "http" "health" }}
+              port: {{ eq (int .Values.deployment.healthCheck.port) (int .Values.deployment.port) | ternary "http" "health" }}
             initialDelaySeconds: 5
             periodSeconds: 15
           livenessProbe:
             httpGet:
               path: {{ .Values.deployment.healthCheck.path }}
-              port: {{ eq (int .Values.deployment.healthCheck.port) 80 | ternary "http" "health" }}
+              port: {{ eq (int .Values.deployment.healthCheck.port) (int .Values.deployment.port) | ternary "http" "health" }}
             initialDelaySeconds: 30
             periodSeconds: 30
       volumes:

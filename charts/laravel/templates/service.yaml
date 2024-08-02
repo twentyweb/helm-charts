@@ -10,7 +10,7 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: 80
+      targetPort: http
   selector:
     app.kubernetes.io/name: {{ include "laravel.deployment-app.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
