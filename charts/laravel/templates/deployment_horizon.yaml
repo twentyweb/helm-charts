@@ -48,8 +48,7 @@ spec:
         - name: horizon
           image: {{ required "App image required" .Values.deployment.images.app }}:{{ required "App version" .Values.deployment.version }}
           imagePullPolicy: {{ .Values.deployment.pullPolicy }}
-          command: [ "/scripts/entrypoint_laravel_horizon.sh" ]
-          args: [ ]
+          args: ["php", "artisan", "horizon" ]
           resources:
             {{- with .Values.horizon.resources }}
             {{- toYaml . | nindent 12 }}

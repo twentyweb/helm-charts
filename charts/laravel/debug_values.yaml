@@ -3,11 +3,15 @@ deployment:
   images:
     app: "debug/image"
 
+  port: 8080
   healthCheck:
-    path: "/up"
-    port: 80
+    path: "/healthcheck"
+    port: 8080
 
 horizon:
+  enabled: true
+
+queueWorkers:
   enabled: true
 
 secretVolumes:

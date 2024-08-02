@@ -24,7 +24,7 @@ metadata:
     app.kubernetes.io/version: "{{ .Values.deployment.version }}"
     role: "queue"
 spec:
-  replicas: {{ default 1 $queue.replica }}
+  replicas: {{ $queue.replica | default 1 }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ template "laravel.deployment-queue-worker.name" . }}
@@ -55,6 +55,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ required "App image required" .Values.deployment.images.app }}:{{ required "App version" .Values.deployment.version }}
           imagePullPolicy: {{ .Values.deployment.pullPolicy }}
+          args: ["php", "artisan", "queue:work", "--verbose", "--queue={{ $queue.name }}", "--name={{ $queue.name }}", "--tries={{ $queue.tries | default 1 }}", "--timeout={{ $queue.timeout | default 90 }}"]
           resources:
             {{- with .Values.queueWorkers.resources }}
             {{- toYaml . | nindent 12 }}

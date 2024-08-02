@@ -48,8 +48,7 @@ spec:
         - name: scheduler
           image: {{ required "App image required" .Values.deployment.images.app }}:{{ required "App version" .Values.deployment.version }}
           imagePullPolicy: {{ .Values.deployment.pullPolicy }}
-          command: [ "/scripts/entrypoint_laravel_scheduler.sh" ]
-          args: [ ]
+          args: ["php", "artisan", "schedule:work" ]
           resources:
             {{- with .Values.scheduler.resources }}
             {{- toYaml . | nindent 12 }}
