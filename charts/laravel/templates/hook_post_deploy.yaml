@@ -2,7 +2,7 @@
 
 {{- $command := .Values.hooks.postDeploy.command -}}
 {{- if kindOf .Values.hooks.postDeploy.command | eq "slice" -}}
-{{- $command = first .Values.hooks.postDeploy.command -}}
+{{- $command = join " && " .Values.hooks.postDeploy.command -}}
 {{- end -}}
 
 apiVersion: batch/v1
