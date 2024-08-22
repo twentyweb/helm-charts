@@ -14,6 +14,11 @@ horizon:
 queueWorkers:
   enabled: true
 
+hooks:
+  postDeploy:
+    enabled: true
+    command: "php artisan migrate --force -n"
+
 secretVolumes:
   - name: secret-name
     mountPath: /storage
