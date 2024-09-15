@@ -75,7 +75,7 @@ spec:
           image: {{ required "App image required" .Values.deployment.images.app }}:{{ required "App version" .Values.deployment.version }}
           imagePullPolicy: {{ .Values.deployment.pullPolicy }}
           {{- if .Values.deployment.octane.enabled }}
-          args: ["php", "artisan", "octane:start", "--port={{ .Values.deployment.port }}"]
+          args: ["php", "artisan", "octane:start", "--port={{ .Values.deployment.port }}", "--host=0.0.0.0"]
           {{- else }}
           args: [ ]
           {{- end }}
