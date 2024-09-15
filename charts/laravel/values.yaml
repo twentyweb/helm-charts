@@ -9,10 +9,15 @@ deployment:
   podAnnotations: {}
 
   port: 80
+
   # Health check settings
   healthCheck:
     path: "/ping"
     port: 8000
+
+  # start laravel with octane
+  octane:
+    enabled: false
 
   rollingUpdate:
     maxUnavailable: 0

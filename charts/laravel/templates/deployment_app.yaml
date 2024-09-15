@@ -74,14 +74,18 @@ spec:
         - name: app
           image: {{ required "App image required" .Values.deployment.images.app }}:{{ required "App version" .Values.deployment.version }}
           imagePullPolicy: {{ .Values.deployment.pullPolicy }}
+          {{- if .Values.deployment.octane.enabled }}
+          args: ["php", "artisan", "octane:start", "--port={{ .Values.deployment.port }}"]
+          {{- else }}
           args: [ ]
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ (int .Values.deployment.port) }}
               protocol: TCP
             {{- if ne (int .Values.deployment.healthCheck.port) (int .Values.deployment.port) }}
             - name: health
-              containerPort: {{ .Values.deployment.healthCheck.port}}
+              containerPort: {{ .Values.deployment.healthCheck.port }}
               protocol: TCP
             {{- end }}
           resources:
@@ -122,6 +126,12 @@ spec:
               port: {{ eq (int .Values.deployment.healthCheck.port) (int .Values.deployment.port) | ternary "http" "health" }}
             initialDelaySeconds: 30
             periodSeconds: 30
+          {{- if .Values.deployment.octane.enabled }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["php", "artisan", "octane:stop"]
+          {{- end }}
       volumes:
         {{- range .Values.secretVolumes }}
         - name: {{ .name }}
