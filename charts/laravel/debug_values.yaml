@@ -8,6 +8,9 @@ deployment:
     path: "/healthcheck"
     port: 8080
 
+  octane:
+    enabled: false
+
 horizon:
   enabled: true
 
@@ -18,7 +21,8 @@ hooks:
   postDeploy:
     enabled: true
     command:
-      ["php artisan migrate --force -n", "php artisan db:seed --force -n"]
+      - "php artisan migrate --force -n"
+      - "php artisan db:seed --force -n"
 
 secretVolumes:
   - name: secret-name

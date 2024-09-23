@@ -33,7 +33,7 @@ spec:
         - name: post-deploy-job
           image: {{ required "App image required" .Values.deployment.images.app }}:{{ required "App version" .Values.deployment.version }}
           imagePullPolicy: {{ .Values.deployment.pullPolicy }}
-          args: ["sh", '-c', {{ $command | quote }}]
+          args: ['sh', '-c', '{{ $command | quote }}']
           env:
             - name: LOG_CHANNEL
               value: "stderr"
