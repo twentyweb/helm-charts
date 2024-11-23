@@ -1,0 +1,16 @@
+{{- if .Values.reverb.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "laravel.fullname" . }}-reverb
+  labels:
+    {{- include "laravel.labels" . | nindent 4 }}
+spec:
+    type: {{ .Values.service.type }}
+    ports:
+        - port: {{ .Values.reverb.port }}
+          targetPort: reverb
+    selector:
+        app.kubernetes.io/name: {{ include "laravel.deployment-app.name" . }}-reverb
+        app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}

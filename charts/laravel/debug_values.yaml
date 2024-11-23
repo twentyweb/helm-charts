@@ -17,6 +17,10 @@ horizon:
 queueWorkers:
   enabled: true
 
+reverb:
+  enabled: true
+  debug: true
+
 hooks:
   postDeploy:
     enabled: true

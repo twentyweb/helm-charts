@@ -1,0 +1,98 @@
+{{ define "laravel.deployment-reverb.name" -}}
+{{ template "laravel.name" . }}-reverb
+{{- end -}}
+
+{{ define "laravel.deployment-reverb.fullname" -}}
+{{ template "laravel.fullname" . }}-reverb
+{{- end -}}
+
+{{- if .Values.reverb.enabled -}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "laravel.deployment-reverb.fullname" . }}
+  labels:
+    {{- include "laravel.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ template "laravel.deployment-reverb.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: "{{ .Values.deployment.version }}"
+    role: "reverb"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ template "laravel.deployment-reverb.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  revisionHistoryLimit: 3
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ template "laravel.deployment-reverb.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/version: "{{ .Values.deployment.version }}"
+        role: "reverb"
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ include "laravel.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if not .Values.options.allowArmNodes }}
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
+      {{- end }}
+      containers:
+        - name: reverb
+          image: {{ required "App image required" .Values.deployment.images.app }}:{{ required "App version" .Values.deployment.version }}
+          imagePullPolicy: {{ .Values.deployment.pullPolicy }}
+          args:
+            - "php"
+            - "artisan"
+            {{- if (default false .Values.reverb.debug) }}
+            - "--debug"
+            {{- end }}
+            - "--host=0.0.0.0"
+            - "--port={{ required "Reverb port is required" .Values.reverb.port }}"
+            - "reverb:start"
+          ports:
+            - name: reverb
+              containerPort: {{ int (required "Reverb port is required" .Values.reverb.port) }}
+              protocol: TCP
+          resources:
+            {{- with .Values.reverb.resources }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          env:
+            {{- if not .Values.options.disableDefaultEnv }}
+            - name: LOG_CHANNEL
+              value: "stderr"
+            {{- end }}
+            {{- with .Values.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          envFrom:
+            {{- with .Values.envFrom }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          volumeMounts:
+            {{- range .Values.secretVolumes }}
+            {{- $volume := . -}}
+            {{- range .items }}
+            - name: {{ $volume.name }}
+              mountPath: {{ $volume.mountPath | default "/" | trimSuffix "/" }}/{{ .key }}
+              subPath: {{ .key }}
+              readOnly: true
+            {{- end }}
+            {{- end }}
+      volumes:
+      {{- range .Values.secretVolumes }}
+        - name: {{ .name }}
+          secret:
+            secretName: {{ .name }}
+            items:
+              {{- toYaml .items | nindent 14 }}
+      {{- end }}
+{{- end }}
