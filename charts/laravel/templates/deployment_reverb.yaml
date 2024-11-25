@@ -1,37 +1,29 @@
-{{ define "laravel.deployment-reverb.name" -}}
-{{ template "laravel.name" . }}-reverb
-{{- end -}}
-
-{{ define "laravel.deployment-reverb.fullname" -}}
-{{ template "laravel.fullname" . }}-reverb
-{{- end -}}
-
 {{- if .Values.reverb.enabled -}}
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "laravel.deployment-reverb.fullname" . }}
+  name: {{ include "laravel.fullname" . }}-reverb
   labels:
     {{- include "laravel.labels" . | nindent 4 }}
-    app.kubernetes.io/name: {{ template "laravel.deployment-reverb.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/version: "{{ .Values.deployment.version }}"
-    role: "reverb"
+    app.kubernetes.io/component: "reverb"
 spec:
-  replicas: 1
+  replicas: {{ default 1 .Values.reverb.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ template "laravel.deployment-reverb.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "laravel.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: "reverb"
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      {{- with .Values.reverb.rollingUpdate }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
   revisionHistoryLimit: 3
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ template "laravel.deployment-reverb.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-        app.kubernetes.io/version: "{{ .Values.deployment.version }}"
-        role: "reverb"
+        {{- include "laravel.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: "reverb"
     spec:
     {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -69,6 +61,10 @@ spec:
             {{- if not .Values.options.disableDefaultEnv }}
             - name: LOG_CHANNEL
               value: "stderr"
+            {{- end }}
+            {{- if gt (int .Values.reverb.replicaCount) 1 }}
+            - name: REVERB_SCALING_ENABLED
+              value: "true"
             {{- end }}
             {{- with .Values.env }}
             {{- toYaml . | nindent 12 }}

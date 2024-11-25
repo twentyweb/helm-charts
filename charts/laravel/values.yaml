@@ -126,6 +126,9 @@ reverb:
   port: 8080
   host: ws.example.com
   debug: false
+  replicaCount: 1
+  rollingUpdate:
+    maxSurge: 1
   resources:
     requests:
       cpu: "10m"

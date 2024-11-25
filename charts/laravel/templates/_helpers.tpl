@@ -35,10 +35,10 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "laravel.labels" -}}
-helm.sh/chart: {{ template "laravel.chart" . }}
-{{ template "laravel.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+helm.sh/chart: {{ include "laravel.chart" . }}
+{{ include "laravel.selectorLabels" . }}
+{{- if .Values.deployment.version }}
+app.kubernetes.io/version: {{ .Values.deployment.version | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
@@ -47,7 +47,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 Selector labels
 */}}
 {{- define "laravel.selectorLabels" -}}
-app.kubernetes.io/name: {{ template "laravel.name" . }}
+app.kubernetes.io/name: {{ include "laravel.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
