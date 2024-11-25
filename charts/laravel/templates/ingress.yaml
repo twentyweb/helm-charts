@@ -44,7 +44,7 @@ spec:
             pathType: "ImplementationSpecific"
             backend:
               service:
-                name: {{ include "laravel.deployment-reverb.fullname" . }}
+                name: {{ include "laravel.fullname" . }}-reverb
                 port:
                   number: {{ required "Reverb port is required" .Values.reverb.port }}
   {{- end }}
