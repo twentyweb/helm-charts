@@ -45,9 +45,14 @@ spec:
       serviceAccountName: {{ include "laravel.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if $queue.nodeSelector }}
+      nodeSelector:
+        {{- toYaml $queue.nodeSelector | nindent 8 }}
+      {{- else }}
       {{- if not .Values.options.allowArmNodes }}
       nodeSelector:
         kubernetes.io/arch: "amd64"
+      {{- end }}
       {{- end }}
       containers:
         - name: queue-worker

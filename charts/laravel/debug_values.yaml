@@ -1,3 +1,6 @@
+options:
+  allowArmNodes: true
+
 deployment:
   version: "v1"
   images:
@@ -13,6 +16,8 @@ deployment:
 
 horizon:
   enabled: true
+  nodeSelector:
+    kubernetes.io/arch: "arm64"
 
 queueWorkers:
   enabled: true
