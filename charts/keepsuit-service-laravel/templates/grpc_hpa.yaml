@@ -18,12 +18,16 @@ spec:
     - type: Resource
       resource:
         name: cpu
-        targetAverageUtilization: {{ .Values.grpc.autoscaling.targetCPUUtilizationPercentage }}
-    {{- end }}
-    {{- if .Values.grpc.autoscaling.targetMemoryUtilizationPercentage }}
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.grpc.autoscaling.targetCPUUtilizationPercentage }}
+  {{- end }}
+  {{- if .Values.grpc.autoscaling.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
         name: memory
-        targetAverageUtilization: {{ .Values.grpc.autoscaling.targetMemoryUtilizationPercentage }}
-    {{- end }}
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.grpc.autoscaling.targetMemoryUtilizationPercentage }}
+  {{- end }}
 {{- end }}
