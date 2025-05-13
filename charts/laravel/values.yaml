@@ -99,11 +99,17 @@ horizon:
   enabled: false
   resources:
     requests:
-      cpu: "5m"
+      cpu: "10m"
       memory: "192Mi"
     limits:
       cpu: "500m"
       memory: "640Mi"
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 1000
+    # targetMemoryUtilizationPercentage: 200
 
 queueWorkers:
   enabled: false

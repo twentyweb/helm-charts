@@ -16,6 +16,8 @@ deployment:
 
 horizon:
   enabled: true
+  autoscaling:
+    enabled: true
   nodeSelector:
     kubernetes.io/arch: "arm64"
 
