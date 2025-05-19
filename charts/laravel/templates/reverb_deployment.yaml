@@ -83,6 +83,16 @@ spec:
               readOnly: true
             {{- end }}
             {{- end }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.reverb.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.reverb.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 30
       volumes:
       {{- range .Values.secretVolumes }}
         - name: {{ .name }}
