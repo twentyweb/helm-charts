@@ -1,10 +1,14 @@
 {{- if .Values.autoscaling.enabled }}
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "laravel.fullname" . }}
   labels:
     {{- include "laravel.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ include "laravel.name" . }}-app
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: "{{ .Values.deployment.version }}"
+    role: "app"
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
