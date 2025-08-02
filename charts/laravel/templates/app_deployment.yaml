@@ -75,7 +75,7 @@ spec:
           image: {{ required "App image required" .Values.deployment.images.app }}:{{ required "App version" .Values.deployment.version }}
           imagePullPolicy: {{ .Values.deployment.pullPolicy }}
           {{- if .Values.deployment.octane.enabled }}
-          args: ["php", "artisan", "octane:start", "--port={{ .Values.deployment.port }}", "--host=", "--log-level=info"]
+          args: ["php", "artisan", "octane:start", "--port={{ .Values.deployment.port }}", "--host=", "--workers={{ .Values.deployment.octane.workers | default "auto" }}", "--log-level=info"]
           {{- else }}
           args: [ ]
           {{- end }}
@@ -114,6 +114,28 @@ spec:
               readOnly: true
             {{- end }}
             {{- end }}
+          {{- if .Values.deployment.octane.enabled }}
+          readinessProbe:
+            exec:
+              command:
+              - php
+              - artisan
+              - octane:status
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          livenessProbe:
+            exec:
+              command:
+              - php
+              - artisan
+              - octane:status
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          lifecycle:
+            preStop:
+              exec:
+                command: ["php", "artisan", "octane:stop"]
+          {{- else -}}
           readinessProbe:
             httpGet:
               path: {{ .Values.deployment.healthCheck.path }}
@@ -126,11 +148,6 @@ spec:
               port: {{ eq (int .Values.deployment.healthCheck.port) (int .Values.deployment.port) | ternary "http" "health" }}
             initialDelaySeconds: 30
             periodSeconds: 30
-          {{- if .Values.deployment.octane.enabled }}
-          lifecycle:
-            preStop:
-              exec:
-                command: ["php", "artisan", "octane:stop"]
           {{- end }}
       volumes:
         {{- range .Values.secretVolumes }}

@@ -18,6 +18,7 @@ deployment:
   # start laravel with octane
   octane:
     enabled: false
+    workers: auto
 
   rollingUpdate:
     maxUnavailable: 0
