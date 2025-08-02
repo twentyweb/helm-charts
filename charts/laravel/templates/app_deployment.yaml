@@ -123,6 +123,7 @@ spec:
               - octane:status
             initialDelaySeconds: 5
             periodSeconds: 15
+            timeoutSeconds: 10
           livenessProbe:
             exec:
               command:
@@ -131,6 +132,7 @@ spec:
               - octane:status
             initialDelaySeconds: 30
             periodSeconds: 30
+            timeoutSeconds: 10
           lifecycle:
             preStop:
               exec:
