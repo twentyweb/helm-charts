@@ -137,7 +137,7 @@ spec:
             preStop:
               exec:
                 command: ["php", "artisan", "octane:stop"]
-          {{- else -}}
+          {{- else }}
           readinessProbe:
             httpGet:
               path: {{ .Values.deployment.healthCheck.path }}
