@@ -43,6 +43,7 @@ hooks:
   postDeploy:
     enabled: false
     command: "php artisan migrate --force -n"
+    env: {}
 
 #
 # Main entry point settings

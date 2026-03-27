@@ -35,9 +35,16 @@ spec:
           imagePullPolicy: {{ .Values.deployment.pullPolicy }}
           args: ['sh', '-c', {{ $command | squote }}]
           env:
+            {{- if not .Values.options.disableDefaultEnv }}
             - name: LOG_CHANNEL
               value: "stderr"
+            - name: AUTORUN_LARAVEL_OPTIMIZE
+              value: "false"
+            {{- end }}
             {{- with .Values.env }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- with .Values.hooks.postDeploy.env }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
           envFrom:
